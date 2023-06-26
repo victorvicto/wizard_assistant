@@ -17,17 +17,25 @@ gpt_functions = [
         },
     },
     {
-        "name": "add_events_to_calendar",
-        "description": "Adds multiple events to the user's google calendar.",
+        "name": "get_current_day",
+        "description": "Returns the current date in the 'year-month-day' format.",
+        "parameters": {
+            "type": "object",
+            "properties": {}
+        }
+    },
+    {
+        "name": "add_event_to_calendar",
+        "description": "Adds an event to the user's google calendar.",
         "parameters": {
             "type": "object",
             "properties": {
-                "events": {
-                    "type": "list of objects",
-                    "description": "A list of google calendar events. Each event should at least contain a summary, a start date and time and an end date and time. Unless specified otherwise, the timezone of each event should be the one of Brussels.",
+                "event": {
+                    "type": "object",
+                    "description": "An object that follow google calendar's api format.",
                 }
             },
-            "required": ["events"],
+            "required": ["event"],
         },
     },
     {
@@ -45,7 +53,10 @@ gpt_functions = [
                     "description": "a date string following the 'year-month-day' format. This date corresponds to the end of the period of interest.",
                 },
                 "keywords": {
-                    "type": "list of strings",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "a list of strings. The events returned by the function will be filtered to match the keywords in that list.",
                 }
             },
@@ -59,7 +70,10 @@ gpt_functions = [
             "type": "object",
             "properties": {
                 "event_ids": {
-                    "type": "list of strings",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
                     "description": "A list of ids corresponding to the events that should be deleted from the google calendar.",
                 }
             },
@@ -70,8 +84,17 @@ gpt_functions = [
 
 available_functions = {
     "send_message_to_friends": send_message_to_friends,
-    "add_events_to_calendar": add_events_to_calendar,
+    "get_current_day": get_current_day,
+    "add_event_to_calendar": add_event_to_calendar,
     "get_events_between_dates": get_events_between_dates,
     "delete_events": delete_events
+}
+
+is_async = {
+    "send_message_to_friends": True,
+    "get_current_day": False,
+    "add_event_to_calendar": False,
+    "get_events_between_dates": False,
+    "delete_events": False
 }
 

@@ -9,6 +9,8 @@ def authenticate():
     service = build('calendar', 'v3', credentials=creds)
     return service
 
+def get_current_day():
+    return datetime.strftime(datetime.today(), "%y-%m-%d")
 # service = authenticate()
 
 # Function to add events to a Google Calendar
@@ -23,6 +25,20 @@ def add_events_to_calendar(events):
     #     service.events().insert(calendarId=CALENDAR_ID, body=event_body).execute()
     print("\nEVENTS TO BE ADDED:")
     print(events)
+    print()
+    return "success"
+
+def add_event_to_calendar(event):
+    # service = authenticate() // not necessary anymore, done in globals but might still come in handy if the authentication cancels automatically
+    # for event in events:
+    #     event_body = {
+    #         'summary': event['summary'],
+    #         'start': {'dateTime': event['start']},
+    #         'end': {'dateTime': event['end']}
+    #     }
+    #     service.events().insert(calendarId=CALENDAR_ID, body=event_body).execute()
+    print("\nEVENTS TO BE ADDED:")
+    print(event)
     print()
     return "success"
 

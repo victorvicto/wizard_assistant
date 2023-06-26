@@ -36,14 +36,11 @@ async def handle_gpt_answer(answer):
         )
         second_response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-0613",
-            messages=messages_queue,
-        ).choices[0].message
-        messages_queue.append(second_response)
-        print(second_response.content)
-        if vocal:
-            engine.say(second_response.content)
-            engine.runAndWait()
-            engine.stop()
+            messages=messages_queue, 
+            functions=gpt_functions,
+            function_call="auto"
+        )
+        handle_gpt_answer(second_response.choices[0].message) # Risky but worth it
     else:
         messages_queue.append(answer)
         print("\n"+answer.content)

@@ -43,7 +43,7 @@ def add_event_to_calendar(event):
     return "success"
 
 # Function to retrieve events from a Google Calendar between specified start and end dates
-def get_events_between_dates(start_date, end_date, keyword=None):
+def get_events_between_dates(start_date, end_date, keywords=None):
     #service = authenticate()
 
     # start_datetime = datetime.combine(start_date, datetime.min.time()).isoformat() + 'Z'
@@ -62,7 +62,7 @@ def get_events_between_dates(start_date, end_date, keyword=None):
     print("\nHERE ARE THE DATE PERIOD THAT WAS REQUIRED/")
     print(start_date)
     print(end_date)
-    print("With the keyword: ", keyword)
+    print("With the keywords: ", keywords)
     return input("What should the answer be?\n")
 
 # Function to modify a specific event in a Google Calendar
@@ -99,11 +99,7 @@ if __name__ == '__main__':
             'start': '2023-06-27T10:00:00',
             'end': '2023-06-27T11:00:00'
         },
-        {
-            'summary': 'Appointment',
-            'start': '2023-06-28T14:00:00',
-            'end': '2023-06-28T15:00:00'
-        }
+        [{'id': "4523", 'summary': "Monica's Birthday!!", 'start': '2023-07-08T14:00:00', 'end': '2023-07-08T15:00:00'}]
     ]
 
     # Add events to the calendar

@@ -25,17 +25,20 @@ gpt_functions = [
         }
     },
     {
-        "name": "add_event_to_calendar",
-        "description": "Adds an event to the user's google calendar.",
+        "name": "add_events_to_calendar",
+        "description": "Adds one or multiple events to the user's google calendar.",
         "parameters": {
             "type": "object",
             "properties": {
-                "event": {
-                    "type": "object",
-                    "description": "An object that follow google calendar's api format.",
+                "events": {
+                    "type": "array",
+                    "items":{
+                        "type": "string"
+                    },
+                    "description": "A list of strings describing events to add to the calendar. The strings must be in json format and follow the google calendar api event structure",
                 }
             },
-            "required": ["event"],
+            "required": ["events"],
         },
     },
     {
@@ -57,10 +60,28 @@ gpt_functions = [
                     "items": {
                         "type": "string"
                     },
-                    "description": "a list of strings. The events returned by the function will be filtered to match the keywords in that list.",
+                    "description": "a list of strings. Each string should be a single word. The events returned by the function will be filtered to match the keywords in that list.",
                 }
             },
             "required": ["start_date","end_date"],
+        },
+    },
+    {
+        "name": "modify_event",
+        "description": "Modifies an event in the user's google calendar.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "event_id": {
+                    "type": "string",
+                    "description": "The id of the event that should be modified.",
+                },
+                "new_data":{
+                    "type": "string",
+                    "description": "A string describing the full modified event. Complete, including the unchanged parameters. The strings must be in json format and follow the google calendar api event structure",
+                }
+            },
+            "required": ["event_id","new_data"],
         },
     },
     {
@@ -85,16 +106,18 @@ gpt_functions = [
 available_functions = {
     "send_message_to_friends": send_message_to_friends,
     "get_current_day": get_current_day,
-    "add_event_to_calendar": add_event_to_calendar,
+    "add_events_to_calendar": add_events_to_calendar,
     "get_events_between_dates": get_events_between_dates,
+    "modify_event": modify_event,
     "delete_events": delete_events
 }
 
 is_async = {
     "send_message_to_friends": True,
     "get_current_day": False,
-    "add_event_to_calendar": False,
+    "add_events_to_calendar": False,
     "get_events_between_dates": False,
+    "modify_event": False,
     "delete_events": False
 }
 

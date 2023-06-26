@@ -6,6 +6,7 @@ from secret_keys import *
 from gpt_functions import *
 import json
 import asyncio
+from datetime import datetime
 
 vocal = False
 openai.api_key = OPEN_AI_KEY
@@ -20,6 +21,7 @@ engine = pyttsx3.init()
 engine.setProperty('voice', 0)
 
 messages_queue = [{"role":"system", "content":"You are a surfer dude that gives really concise but helpful answers and calls the user 'V', 'bro', 'dude' or 'ma man'. You use a lot of slang words and integrate pronunciation quirks in your written text (like abreviations or multiple vowels to make a longer sound like duuude). You don't repeat what the prompt was saying. If you feel like you are missing an information in order to answer properly, you do not hesitate to ask the user (you can assume the user has the info you are looking for). You call yourself \"Vic's wizard assistant\"."}]#You try hard to use as little tokens as possible in your answers.
+messages_queue[0]["content"] +=  " Today is the "+datetime.today().strftime("%d %B, %Y")
 
 async def handle_gpt_answer(answer):
     print("\nANSWER:")
@@ -73,6 +75,7 @@ async def main():
                 text = input("Tell me...\n")
 
             messages_queue.append({"role":"user","content":text})
+            messages_queue[0]["content"] = messages_queue[0]["content"].split(" Today is the ")[0] + datetime.today().strftime("%d %B, %Y")
             chat_completion = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo-0613", 
                 messages=messages_queue, 

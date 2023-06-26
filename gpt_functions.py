@@ -1,5 +1,5 @@
-from telegram import *
-from g_calendar import *
+from telegram_manager import *
+from calendar_manager import *
 
 gpt_functions = [
     {

@@ -4,26 +4,27 @@ from calendar_manager import *
 gpt_functions = [
     {
         "name": "send_message_to_friends",
-        "description": "Sends a message to the user's friends via a group chat. This goup chat's members are the user and his friends. The message will look like it has been sent by a bot called \"Vic's wizzard assistant\".",
+        "description": "Sends a message to the user's friends via a group chat. This goup chat's members are the user and his friends.",
         "parameters": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string",
-                    "description": "The message that should be sent to the group chat.",
+                    "description": "The message that should be sent to the group chat. The message will look like it has been sent by a bot called \"Vic's wizzard assistant\". In the message you can refer to the user (the person who's assistant you are) as Vic.",
                 }
             },
             "required": ["message"],
         },
-    },
-    {
-        "name": "get_current_day",
-        "description": "Returns the current date in the 'year-month-day' format.",
-        "parameters": {
-            "type": "object",
-            "properties": {}
-        }
-    },
+    }
+    ,
+    # {
+    #     "name": "get_current_day",
+    #     "description": "Returns the current date in the 'year-month-day' format.",
+    #     "parameters": {
+    #         "type": "object",
+    #         "properties": {}
+    #     }
+    # },
     {
         "name": "add_events_to_calendar",
         "description": "Adds one or multiple events to the user's google calendar.",
@@ -105,7 +106,7 @@ gpt_functions = [
 
 available_functions = {
     "send_message_to_friends": send_message_to_friends,
-    "get_current_day": get_current_day,
+    # "get_current_day": get_current_day,
     "add_events_to_calendar": add_events_to_calendar,
     "get_events_between_dates": get_events_between_dates,
     "modify_event": modify_event,
@@ -114,7 +115,7 @@ available_functions = {
 
 is_async = {
     "send_message_to_friends": True,
-    "get_current_day": False,
+    # "get_current_day": False,
     "add_events_to_calendar": False,
     "get_events_between_dates": False,
     "modify_event": False,

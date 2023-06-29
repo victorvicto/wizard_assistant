@@ -12,9 +12,6 @@ def authenticate():
     service = build('calendar', 'v3', credentials=creds)
     return service
 
-def get_current_day():
-    return datetime.strftime(datetime.today(), "%y-%m-%d")
-
 service = authenticate()
 
 # Function to add events to a Google Calendar
@@ -30,20 +27,6 @@ async def add_events_to_calendar(events):
         except Exception as err:
             return "an error occured: "+err
     return "cancelled by user"
-
-# def add_event_to_calendar(event):
-#     # service = authenticate() // not necessary anymore, done in globals but might still come in handy if the authentication cancels automatically
-#     # for event in events:
-#     #     event_body = {
-#     #         'summary': event['summary'],
-#     #         'start': {'dateTime': event['start']},
-#     #         'end': {'dateTime': event['end']}
-#     #     }
-#     #     service.events().insert(calendarId=CALENDAR_ID, body=event_body).execute()
-#     print("\nEVENTS TO BE ADDED:")
-#     print(event)
-#     print()
-#     return "success"
 
 # Function to retrieve events from a Google Calendar between specified start and end dates
 async def get_events_between_dates(start_date, end_date, keywords=None):
@@ -84,7 +67,7 @@ async def modify_event(event_id, new_data):
         try:
             event = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
             event.update(new_data)
-            updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=event_id, body=event).execute()
+            service.events().update(calendarId=CALENDAR_ID, eventId=event_id, body=event).execute()
             return "success"
         except Exception as err:
             return "an error occured: "+err

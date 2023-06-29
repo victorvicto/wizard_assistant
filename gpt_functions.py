@@ -15,16 +15,7 @@ gpt_functions = [
             },
             "required": ["message"],
         },
-    }
-    ,
-    # {
-    #     "name": "get_current_day",
-    #     "description": "Returns the current date in the 'year-month-day' format.",
-    #     "parameters": {
-    #         "type": "object",
-    #         "properties": {}
-    #     }
-    # },
+    },
     {
         "name": "add_events_to_calendar",
         "description": "Adds one or multiple events to the user's google calendar.",
@@ -106,19 +97,9 @@ gpt_functions = [
 
 available_functions = {
     "send_message_to_friends": send_message_to_friends,
-    # "get_current_day": get_current_day,
     "add_events_to_calendar": add_events_to_calendar,
     "get_events_between_dates": get_events_between_dates,
     "modify_event": modify_event,
     "delete_events": delete_events
 }
-
-# is_async = {
-#     "send_message_to_friends": True,
-#     # "get_current_day": False,
-#     "add_events_to_calendar": False,
-#     "get_events_between_dates": False,
-#     "modify_event": False,
-#     "delete_events": False
-# }
 

@@ -77,59 +77,28 @@ async def get_events_between_dates(start_date, end_date, keywords=None):
     return "{'status': 'cancelled by user'}"
 
 # Function to modify a specific event in a Google Calendar
-def modify_event(event_id, new_data):
+async def modify_event(event_id, new_data):
     #service = authenticate()
+    conf = await confirm("\nMODIFIED EVENT:\n"+str(new_data)+"\n")
+    if conf:
+        try:
+            event = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
+            event.update(new_data)
+            updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=event_id, body=event).execute()
+            return "success"
+        except Exception as err:
+            return "an error occured: "+err
+    return "cancelled by user"
 
-    # event = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
-    # event.update(new_data)
-    # updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=event_id, body=event).execute()
-    # return updated_event
-    print("\nEVENT MODIFIED:")
-    print(event_id)
-    print(new_data)
-    print()
-    return "success"
-
-def delete_events(event_ids):
+async def delete_events(event_ids):
     #service = authenticate()
+    conf = await confirm("\nEVENTS TO BE DELETED:\n"+str(event_ids)+"\n")
+    if conf:
+        try:
+            for event_id in event_ids:
+                service.events().delete(calendarId=CALENDAR_ID, eventId=event_id).execute()
+            return "success"
+        except Exception as err:
+            return "an error occured: "+err
+    return "cancelled by user"
 
-    # event = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
-    # event.update(new_data)
-    # updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=event_id, body=event).execute()
-    # return updated_event
-    print("\nEVENTs DELETED:")
-    print(event_ids)
-    print()
-    return "success"
-
-# Example usage
-if __name__ == '__main__':
-    events = [
-        {
-            'summary': 'Meeting',
-            'start': '2023-06-27T10:00:00',
-            'end': '2023-06-27T11:00:00'
-        },
-        [{'id': "4523", 'summary': "Monica's Birthday!!", 'start': '2023-07-08T14:00:00', 'end': '2023-07-08T15:00:00'}]
-    ]
-
-    # Add events to the calendar
-    add_events_to_calendar(events)
-
-    # Retrieve events between specified dates
-    start_date = datetime(2023, 6, 26).date()
-    end_date = datetime(2023, 6, 29).date()
-    events_between_dates = get_events_between_dates(start_date, end_date)
-    print("Events between", start_date, "and", end_date)
-    for event in events_between_dates:
-        print(event['summary'])
-
-    # Modify a specific event
-    event_id_to_modify = '<event-id-to-modify>'
-    new_data = {
-        'summary': 'Updated Event',
-        'start': {'dateTime': '2023-06-27T16:00:00'},
-        'end': {'dateTime': '2023-06-27T17:00:00'}
-    }
-    modified_event = modify_event(event_id_to_modify, new_data)
-    print("Modified event:", modified_event['summary'])

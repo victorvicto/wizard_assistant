@@ -19,10 +19,7 @@ async def handle_gpt_answer(answer):
         function_name = message["function_call"]["name"]
         fuction_to_call = available_functions[function_name]
         function_args = json.loads(message["function_call"]["arguments"])
-        if is_async[function_name]:
-            function_response = await fuction_to_call(**function_args)
-        else:
-            function_response = fuction_to_call(**function_args)
+        function_response = await fuction_to_call(**function_args)
         messages_queue.append(message)  # extend conversation with assistant's reply
         messages_queue.append(
             {

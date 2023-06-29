@@ -113,12 +113,12 @@ available_functions = {
     "delete_events": delete_events
 }
 
-is_async = {
-    "send_message_to_friends": True,
-    # "get_current_day": False,
-    "add_events_to_calendar": False,
-    "get_events_between_dates": False,
-    "modify_event": False,
-    "delete_events": False
-}
+# is_async = {
+#     "send_message_to_friends": True,
+#     # "get_current_day": False,
+#     "add_events_to_calendar": False,
+#     "get_events_between_dates": False,
+#     "modify_event": False,
+#     "delete_events": False
+# }
 

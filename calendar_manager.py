@@ -2,68 +2,79 @@ from datetime import datetime
 from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
 from secret_keys import *
+from communicating import *
+import json
 
 # Authenticate and create a Google Calendar service instance
 def authenticate():
+    return "cul"
     creds = Credentials.from_service_account_file(CREDENTIALS_FILE, ['https://www.googleapis.com/auth/calendar'])
     service = build('calendar', 'v3', credentials=creds)
     return service
 
 def get_current_day():
     return datetime.strftime(datetime.today(), "%y-%m-%d")
-# service = authenticate()
+
+service = authenticate()
 
 # Function to add events to a Google Calendar
-def add_events_to_calendar(events):
-    # service = authenticate() // not necessary anymore, done in globals but might still come in handy if the authentication cancels automatically
-    # for event in events:
-    #     event_body = {
-    #         'summary': event['summary'],
-    #         'start': {'dateTime': event['start']},
-    #         'end': {'dateTime': event['end']}
-    #     }
-    #     service.events().insert(calendarId=CALENDAR_ID, body=event_body).execute()
-    print("\nEVENTS TO BE ADDED:")
-    print(events)
-    print()
-    return "success"
+async def add_events_to_calendar(events):
+    conf = await confirm("\nEVENTS TO BE ADDED:"+events+"\n\n")
+    if conf:
+        #service = authenticate() # not necessary anymore, done in globals but might still come in handy if the authentication cancels automatically
+        try:
+            for event in events:
+                event_body = json.loads(event)
+                service.events().insert(calendarId=CALENDAR_ID, body=event_body).execute()
+            return "success"
+        except Exception as err:
+            return "an error occured: "+err
+    return "cancelled by user"
 
-def add_event_to_calendar(event):
-    # service = authenticate() // not necessary anymore, done in globals but might still come in handy if the authentication cancels automatically
-    # for event in events:
-    #     event_body = {
-    #         'summary': event['summary'],
-    #         'start': {'dateTime': event['start']},
-    #         'end': {'dateTime': event['end']}
-    #     }
-    #     service.events().insert(calendarId=CALENDAR_ID, body=event_body).execute()
-    print("\nEVENTS TO BE ADDED:")
-    print(event)
-    print()
-    return "success"
+# def add_event_to_calendar(event):
+#     # service = authenticate() // not necessary anymore, done in globals but might still come in handy if the authentication cancels automatically
+#     # for event in events:
+#     #     event_body = {
+#     #         'summary': event['summary'],
+#     #         'start': {'dateTime': event['start']},
+#     #         'end': {'dateTime': event['end']}
+#     #     }
+#     #     service.events().insert(calendarId=CALENDAR_ID, body=event_body).execute()
+#     print("\nEVENTS TO BE ADDED:")
+#     print(event)
+#     print()
+#     return "success"
 
 # Function to retrieve events from a Google Calendar between specified start and end dates
-def get_events_between_dates(start_date, end_date, keywords=None):
+async def get_events_between_dates(start_date, end_date, keywords=None):
     #service = authenticate()
+    conf = await confirm("\nPERIOD REQUIRED:\n\tstart: "+start_date+"\n\tend: "+end_date+"\n\tkeywords: "+str(keywords)+"\n")
+    if conf:
+        try:
+            start_datetime = datetime.strptime(start_date, "%y-%m-%d")
+            start_datetime.time = datetime.min.time()
+            end_datetime = datetime.strptime(end_date, "%y-%m-%d")
+            end_datetime.time = datetime.max.time()
+            start_datetime_format = start_datetime.isoformat() + 'Z'
+            end_datetime_format = end_datetime.isoformat() + 'Z'
 
-    # start_datetime = datetime.combine(start_date, datetime.min.time()).isoformat() + 'Z'
-    # end_datetime = datetime.combine(end_date, datetime.max.time()).isoformat() + 'Z'
+            events_result = service.events().list(calendarId=CALENDAR_ID, timeMin=start_datetime_format, timeMax=end_datetime_format,
+                                                singleEvents=True, orderBy='startTime').execute()
+            events = events_result.get('items', [])
 
-    # events_result = service.events().list(calendarId=CALENDAR_ID, timeMin=start_datetime, timeMax=end_datetime,
-    #                                       singleEvents=True, orderBy='startTime').execute()
-    # events = events_result.get('items', [])
-
-    # if keyword:
-    #     filtered_events = [event for event in events if keyword.lower() in event.get('summary', '').lower()]
-    #     return filtered_events
-    # else:
-    #     return events
-
-    print("\nHERE ARE THE DATE PERIOD THAT WAS REQUIRED/")
-    print(start_date)
-    print(end_date)
-    print("With the keywords: ", keywords)
-    return input("What should the answer be?\n")
+            final_list = events
+            if keywords is not None:
+                filtered_events = []
+                for event in events:
+                    for k in keywords:
+                        if k.lower() in event.get('summary', '').lower():
+                            filtered_events.append(event)
+                            break
+                final_list = filtered_events
+            return "{'status': 'success', 'events': '"+str(final_list)+"'}"
+        except Exception as err:
+            return "{'status': 'an error occured', 'error': '"+err+"'}"
+    return "{'status': 'cancelled by user'}"
 
 # Function to modify a specific event in a Google Calendar
 def modify_event(event_id, new_data):

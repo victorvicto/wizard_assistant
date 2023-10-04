@@ -31,8 +31,8 @@ def speak(message):
 
 async def listen(message):
     speak(message)
-    while True:
-        if VOCAL_LISTEN:
+    if VOCAL_LISTEN:
+        while True: # Why infinite loop? TODO: think
             try:
                 with mic as source:
                     print("Listening...")
@@ -50,8 +50,9 @@ async def listen(message):
             except KeyboardInterrupt:
                 print("Program terminated.")
                 break
-        else:
-            text = input()
-        if len(text)>0:
-            return text
-    return None
+
+            if len(text)>0:
+                return text
+        return None
+    else:
+        return input()
